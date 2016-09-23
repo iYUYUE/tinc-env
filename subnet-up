@@ -1,9 +1,7 @@
 #!/bin/sh
 
-IP="/usr/bin/env ip"
-
 if [ "$NODE" != "$NAME" ]; then
-    if ! "$IP" route show | grep 'scope link' | grep -q "$SUBNET"; then
-        "$IP" route add "$SUBNET" dev "$INTERFACE"
+    if ! /usr/bin/env ip route show | grep 'scope link' | grep -q "$SUBNET"; then
+        /usr/bin/env ip route add "$SUBNET" dev "$INTERFACE"
     fi
 fi
