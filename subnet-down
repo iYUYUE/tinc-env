@@ -1,5 +1,3 @@
 #!/bin/sh
 
-IP="/usr/bin/env ip"
-
-"$IP" route del "$SUBNET" dev "$INTERFACE"
+/usr/bin/env ip route del "$SUBNET" dev "$INTERFACE"
