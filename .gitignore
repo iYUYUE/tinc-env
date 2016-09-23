@@ -1,0 +1,10 @@
+# .gitignore
+
+# don't save any private keys
+*.priv
+
+# don't save the main config
+/tinc.conf
+
+# don't save hosts file (managed in an other repository)
+/hosts/
