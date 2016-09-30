@@ -14,6 +14,22 @@ First, install tinc
     pacman -S tinc
     yum install tinc
 
+Configuration tree
+
+::
+
+    /etc/tinc/bsodvpn/
+    ├── hosts
+    │   ├── host1
+    │   ├── host2
+    │   └── yournodename
+    ├── rsa_key.priv
+    ├── subnet-down
+    ├── subnet-up
+    ├── tinc.conf
+    ├── tinc-down
+    └── tinc-up
+
 Clone this repository
 
 ::
@@ -33,7 +49,7 @@ Create the main tinc configuration ``/etc/tinc/bsodvpn/tinc.conf``
 
     #GraphDumpFile = |/usr/bin/dot -Tsvg -o /var/www/tinc-graph.svg
 
-    #ConnectTo = <host1>
+    #ConnectTo = <host1> # use node names for connectto
     #ConnectTo = <host2>
 
 Create keys for node
@@ -42,7 +58,7 @@ Create keys for node
 
     tincd -n bsodvpn -K
 
-Create some hosts files
+Create some hosts files (and exchange some host files with other people)
 
 ::
 
@@ -54,3 +70,24 @@ Create some hosts files
     ...
     -----END RSA PUBLIC KEY-----
 
+SystemD Service Unit
+
+::
+
+    [Unit]
+    Description=Tinc net %i
+    PartOf=tinc.service
+    ReloadPropagatedFrom=tinc.service
+
+    [Service]
+    Type=simple
+    WorkingDirectory=/etc/tinc/%i
+    ExecStart=/usr/sbin/tincd -n %i -D
+    ExecReload=/usr/sbin/tincd -n %i -kHUP
+    ExecStop=/usr/sbin/tincd -n %i -k
+    TimeoutStopSec=5
+    Restart=always
+    RestartSec=60
+
+    [Install]
+    WantedBy=tinc.service
