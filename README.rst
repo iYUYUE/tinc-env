@@ -28,7 +28,8 @@ Configuration tree
     ├── subnet-up
     ├── tinc.conf
     ├── tinc-down
-    └── tinc-up
+    ├── tinc-up
+    └── blacklist
 
 Clone this repository
 
@@ -91,3 +92,20 @@ SystemD Service Unit
 
     [Install]
     WantedBy=tinc.service
+
+You can create a blacklist for blacklisting some subnets, if you're
+connected to special nets. Each section starts with the default gateway of
+this net between ``[]`` and after there should be a list of blacklisted
+nets. E.g.
+
+::
+
+    [192.168.1.1]
+    192.168.10.0/24
+
+    [172.20.1.1]
+    192.168.10.0/24
+    172.16.0.0/24
+
+
+.. vim : set sw=2 ts=2 et wrap tw=76 :

@@ -8,3 +8,6 @@
 
 # don't save hosts file (managed in an other repository)
 /hosts/
+
+# don't save the subnet blacklist
+/blacklist

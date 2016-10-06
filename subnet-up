@@ -1,7 +1,16 @@
-#!/bin/sh
+#!/bin/bash
 
+GW="$(ip route show | grep default | awk '{print $3}')"
 if [ "$NODE" != "$NAME" ]; then
+    BLACKLIST=""
+    if [ -f "/etc/tinc/${NETNAME}/blacklist" ]; then
+        BLACKLIST=$(sed -n -e "/^\[${GW}\]$/,/^\[.*\]$/{ /^\[${GW}\]$/d; /^\[.*\]$/d; p; }" "/etc/tinc/${NETNAME}/blacklist")
+    fi
     if ! /usr/bin/env ip route show | grep 'scope link' | grep -q "$SUBNET"; then
-        /usr/bin/env ip route add "$SUBNET" dev "$INTERFACE"
+        if ! echo "$BLACKLIST" | grep -q "$SUBNET"; then
+            /usr/bin/env ip route add "$SUBNET" dev "$INTERFACE"
+        else
+            echo "Net $SUBNET is blacklisted"
+        fi
     fi
 fi
