@@ -1,6 +1,6 @@
 #!/bin/bash
 
-GW="$(ip route show | grep default | awk '{print $3}')"
+GW="$(ip route show | grep default | awk '{print $3}' | head -n1)"
 if [ "$NODE" != "$NAME" ]; then
     BLACKLIST=""
     if [ -f "/etc/tinc/${NETNAME}/blacklist" ]; then
