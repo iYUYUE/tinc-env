@@ -1,10 +1,10 @@
 #!/bin/bash
 
 GW="$(ip route show | grep default | awk '{print $3}' | head -n1)"
-OURNAME="$(cat /etc/tinc/$NETNAME/tinc.conf | tr '[A-Z]' '[a-z]' | grep ^name | sed -e 's/ //g' -re 's/^(name|name=)//' | head -n1)"
+OURNAME=$(tr '[:upper:]' '[:lower:]' < "/etc/tinc/$NETNAME/hosts/$NAME" | grep ^name | sed -e 's/ //g' -re 's/^(name|name=)//' | head -n1)
 
-if [ "$OURNAME" = "$NODE" ]; then
-  echo "Not adding our own route (${SUBNET})" | logger
+if [ "$OURNAME" == "$NODE" ]; then
+  echo "Not adding our own route (${SUBNET})"
   exit 0
 fi
 
