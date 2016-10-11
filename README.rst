@@ -44,6 +44,7 @@ Create the main tinc configuration ``/etc/tinc/bsodvpn/tinc.conf``
 ::
 
     Name = <your node name>
+    VPNNet = 172.16.1.0/24
     AddressFamily = any
     DecrementTTL = yes
     Forwarding = internal
