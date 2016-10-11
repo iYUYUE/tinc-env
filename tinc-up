@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-IP=$(tr '[:upper:]' '[:lower:]' < "/etc/tinc/$NETNAME/hosts/$NAME" | grep ^subnet | sed -e 's/ //g' -re 's/^(subnet|subnet=)//' | head -n1)
+IP=$(sed -e 's/ //g' -e '/^subnet/I!d' -re 's/^(subnet|subnet=)//I' < "/etc/tinc/$NETNAME/hosts/$NAME" | head -n1)
 
 /usr/bin/env ip link set "$INTERFACE" up
 /usr/bin/env ip addr add "$IP" dev "$INTERFACE"
