@@ -1,23 +1,24 @@
 #!/bin/bash
 
 GW="$(ip route show | grep default | awk '{print $3}' | head -n1)"
-OURNAME=$(tr '[:upper:]' '[:lower:]' < "/etc/tinc/$NETNAME/hosts/$NAME" | grep ^name | sed -e 's/ //g' -re 's/^(name|name=)//' | head -n1)
+OURNAME=$(sed -e 's/ //g' -e '/^name/I!d' -re 's/^(name|name=)//I' < "/etc/tinc/$NETNAME/tinc.conf" | head -n1)
 
-if [ "$OURNAME" == "$NODE" ]; then
+if [ "${OURNAME,,}" == "${NODE,,}" ]; then
   echo "Not adding our own route (${SUBNET})"
   exit 0
 fi
 
-if [ "$NODE" != "$NAME" ]; then
+if [ "${NODE,,}" != "${NAME,,}" ]; then
     BLACKLIST=""
     if [ -f "/etc/tinc/${NETNAME}/blacklist" ]; then
         BLACKLIST=$(sed -n -e "/^\[${GW}\]$/,/^\[.*\]$/{ /^\[${GW}\]$/d; /^\[.*\]$/d; p; }" "/etc/tinc/${NETNAME}/blacklist")
     fi
     if ! /usr/bin/env ip route show | grep 'scope link' | grep -q "$SUBNET"; then
-        if ! echo "$BLACKLIST" | grep -q "$SUBNET"; then
-            /usr/bin/env ip route add "$SUBNET" dev "$INTERFACE"
-        else
-            echo "Net $SUBNET is blacklisted"
+        if echo "$BLACKLIST" | grep -q "$SUBNET"; then
+            echo "Not adding blacklisted route ($SUBNET)"
+            exit 0
         fi
     fi
 fi
+
+/usr/bin/env ip route add "$SUBNET" dev "$INTERFACE"
