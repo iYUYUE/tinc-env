@@ -36,7 +36,7 @@ Clone this repository
 ::
 
     mkdir /etc/tinc
-    git clone git://github.com/2-B/tinc-env.git /etc/tinc/bsodvpn
+    git clone git://github.com/keachi/tinc-env.git /etc/tinc/bsodvpn
     mkdir /etc/tinc/bsodvpn/hosts
 
 Create the main tinc configuration ``/etc/tinc/bsodvpn/tinc.conf``
