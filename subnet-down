@@ -1,3 +1,7 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 /usr/bin/env ip route del "$SUBNET" dev "$INTERFACE"
+
+if [ -x "/etc/tinc/${NETNAME}/subnet-down.local" ]; then
+    "/etc/tinc/${NETNAME}/subnet-down.local" "$SUBNET" "$INTERFACE"
+fi

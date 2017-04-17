@@ -11,3 +11,6 @@
 
 # don't save the subnet blacklist
 /blacklist
+
+# don't save special local files
+/*.local

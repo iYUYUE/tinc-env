@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 VPNNET=$(sed -e 's/ //g' -e '/^vpnnet/I!d' -re 's/^(vpnnet|vpnnet=)//I' < "/etc/tinc/$NETNAME/tinc.conf" | head -n1)
 IP=$(sed -e 's/ //g' -e '/^subnet/I!d' -re 's/^(subnet|subnet=)//I' < "/etc/tinc/$NETNAME/hosts/$NAME" | head -n1)
@@ -6,3 +6,7 @@ IP=$(sed -e 's/ //g' -e '/^subnet/I!d' -re 's/^(subnet|subnet=)//I' < "/etc/tinc
 /usr/bin/env ip link set "$INTERFACE" up
 /usr/bin/env ip addr add "$IP" dev "$INTERFACE"
 /usr/bin/env ip route add "$VPNNET" dev "$INTERFACE"
+
+if [ -x "/etc/tinc/${NETNAME}/tinc-up.local" ]; then
+    "/etc/tinc/${NETNAME}/tinc-up.local" "$INTERFACE" "$IP" "$VPNNET"
+fi

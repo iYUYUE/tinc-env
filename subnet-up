@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 GW="$(/usr/bin/env ip route show | awk '/default/ {print $3}' | head -n1)"
 OURNAME=$(sed -e 's/ //g' -e '/^name/I!d' -re 's/^(name|name=)//I' < "/etc/tinc/$NETNAME/tinc.conf" | head -n1)
@@ -31,3 +31,7 @@ if [ -f "/etc/tinc/${NETNAME}/blacklist" ]; then
 fi
 
 /usr/bin/env ip route add "$SUBNET" dev "$INTERFACE"
+
+if [ -x "/etc/tinc/${NETNAME}/subnet-up.local" ]; then
+    "/etc/tinc/${NETNAME}/subnet-up.local" "$SUBNET" "$INTERFACE"
+fi
