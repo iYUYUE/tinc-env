@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 GW="$(/usr/bin/env ip route show | awk '/default/ {print $3}' | head -n1)"
-OURNAME=$(sed -e 's/ //g' -e '/^name/I!d' -re 's/^(name|name=)//I' < "/etc/tinc/$NETNAME/tinc.conf" | head -n1)
 VPNNET=$(sed -e 's/ //g' -e '/^vpnnet/I!d' -re 's/^(vpnnet|vpnnet=)//I' < "/etc/tinc/$NETNAME/tinc.conf" | head -n1)
 
 # scope link
@@ -11,7 +10,7 @@ if /usr/bin/env ip route show | grep 'scope link' | grep -q "$SUBNET"; then
 fi
 
 # own routes
-if [ "${OURNAME,,}" == "${NODE,,}" ]; then
+if [ "$NAME" == "$NODE" ]; then
   echo "Not adding our own route (${SUBNET})"
   exit 0
 fi
@@ -30,7 +29,7 @@ if [ -f "/etc/tinc/${NETNAME}/blacklist" ]; then
     fi
 fi
 
-/usr/bin/env ip route add "$SUBNET" dev "$INTERFACE"
+/usr/bin/env ip route add "$SUBNET" dev "$INTERFACE" metric "$WEIGHT"
 
 if [ -x "/etc/tinc/${NETNAME}/subnet-up.local" ]; then
     "/etc/tinc/${NETNAME}/subnet-up.local" "$SUBNET" "$INTERFACE"
