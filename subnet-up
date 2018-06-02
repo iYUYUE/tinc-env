@@ -29,8 +29,8 @@ if [ -f "/etc/tinc/${NETNAME}/blacklist" ]; then
     fi
 fi
 
-/usr/bin/env ip route add "$SUBNET" dev "$INTERFACE" metric "${WEIGHT:-512}"
+/usr/bin/env ip route add "$SUBNET" dev "$INTERFACE" metric "${WEIGHT:-100}"
 
 if [ -x "/etc/tinc/${NETNAME}/subnet-up.local" ]; then
-    "/etc/tinc/${NETNAME}/subnet-up.local" "$SUBNET" "$INTERFACE"
+    "/etc/tinc/${NETNAME}/subnet-up.local" "$SUBNET" "$INTERFACE" "${WEIGHT:-100}"
 fi

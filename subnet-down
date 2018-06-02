@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-/usr/bin/env ip route del "$SUBNET" dev "$INTERFACE"
+/usr/bin/env ip route del "$SUBNET" dev "$INTERFACE" metric "${WEIGHT:-100}"
 
 if [ -x "/etc/tinc/${NETNAME}/subnet-down.local" ]; then
-    "/etc/tinc/${NETNAME}/subnet-down.local" "$SUBNET" "$INTERFACE"
+    "/etc/tinc/${NETNAME}/subnet-down.local" "$SUBNET" "$INTERFACE" "${WEIGHT:-100}"
 fi
