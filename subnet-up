@@ -10,7 +10,7 @@ if [ "$NAME" == "$NODE" ]; then
 fi
 
 # scope link
-if /usr/bin/env ip route show | grep 'scope link' | grep -q "$SUBNET"; then
+if /usr/bin/env ip route show | grep 'scope link' | grep -v "'dev $INTERFACE'" | grep -q "$SUBNET"; then
     echo "Not adding scope link route ($SUBNET)"
     exit 0
 fi
