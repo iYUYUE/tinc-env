@@ -12,8 +12,8 @@ use strict;
 
 my $tincctl = "/sbin/tinc";
 my $network = "vpn0";
-my $png_output = "/home/wwwroot/vpn0.png";
-my $svg_output = "/home/wwwroot/vpn0.svg";
+my $png_output = "/home/wwwroot/tinc/vpn0.png";
+my $svg_output = "/home/wwwroot/tinc/vpn0.svg";
 
 my $grapher = "/usr/bin/fdp";
 my $node_attr = '-Nshape=ellipse -Nfontname=Verdana -Nfontsize=10 -Nstyle=filled -Nfillcolor=#eeeeee -Ncolor=#000000';
