@@ -2,6 +2,7 @@
 
 GW="$(/usr/bin/env ip route show | awk '/default/ {print $3}' | head -n1)"
 VPNNET=$(sed -e 's/ //g' -e '/^vpnnet/I!d' -re 's/^(vpnnet|vpnnet=)//I' < "/etc/tinc/$NETNAME/tinc.conf" | head -n1)
+GATEWAYNODE=$(sed -e 's/ //g' -e '/^gatewaynode/I!d' -re 's/^(gatewaynode|gatewaynode=)//I' < "/etc/tinc/$NETNAME/tinc.conf" | head -n1)
 
 if [ -x "/etc/tinc/${NETNAME}/subnet-up.pre-local" ]; then
     "/etc/tinc/${NETNAME}/subnet-up.pre-local" "$SUBNET" "$INTERFACE" "${WEIGHT:-10}"
@@ -31,6 +32,12 @@ if [ -f "/etc/tinc/${NETNAME}/blacklist" ]; then
         echo "Not adding blacklisted route ($SUBNET)"
         exit 0
     fi
+fi
+
+# own routes
+if [ "$GATEWAYNODE" == "yes" ]; then
+  echo "Not adding route (${SUBNET}) on gateway node"
+  exit 0
 fi
 
 /usr/bin/env ip route add "$SUBNET" dev "$INTERFACE" metric "${WEIGHT:-10}"
